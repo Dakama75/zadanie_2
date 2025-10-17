@@ -153,7 +153,28 @@ double zadanie2(vector<Point> points, int numberOfPoints) {
     return bestWidth;
 }
 
+/**
+ * Najprostszy sposób na rozwiązanie tego zadania
+ * @param points
+ * @param numOfPoints
+ * @return
+ */
+int zadanie3(vector<Point> points, int numOfPoints) {
+    double minDist = distance(points[0], points[1]);
+    Point minPointA, minPointB;
+    for (int i = 0; i < numOfPoints; i++) {
+        for (int j = i+1; j < numOfPoints; j++) {
+            if (distance(points[i], points[j]) < minDist) {
+                minDist = distance(points[i], points[j]);
+                minPointA = points[i];
+                minPointB = points[j];
+            }
+        }
+    }
 
+    cout << "Najbizsze punkty: (" << minPointA.x << ", " << minPointA.y << "), (" << minPointB.x << ", " << minPointB.y << ") d = " << minDist<< endl;
+    return 0;
+}
 
 int main() {
 
@@ -162,7 +183,7 @@ int main() {
     cout << "Podaj nazwe pliku: ";
     cin >> fileName;
 
-    if (fileName == "'") fileName = "dane.txt";
+    if (fileName == "'") fileName = "dane.txt"; // nie chciało mi się za każdym razem wpisywać "dane.txt" więc dla przyśpieszenia debbugowania stworzyłem tego if
 
     double x, y; // zmienne przechowujące x i y poszczególych punktów
     vector<Point> points;  // 2 wymiarowy vector, przechowujący współrzędne x i y punktów
@@ -191,6 +212,8 @@ int main() {
 
 
     zadanie2(zadanie1Results, zadanie1Results.size());
+
+    zadanie3(points, numOfPoints);
 
     return 0;
     // TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
