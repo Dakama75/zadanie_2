@@ -30,18 +30,14 @@ double orientation(const Point& a, const Point& b, const Point& c) {
 }
 
 /**
- *
- * @param a
- * @param b
+ *Oblicza kwadrat odległości między punktami a i b
  * @return Kwadrat odległośći miedzy punktami
  */
 double distanceSquared(const Point& a, const Point& b) {
     return (a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y);
 }
 /**
- *
- * @param a
- * @param b
+ *Oblicza odległość miedzy punktami a i b
  * @return Odległość miedzy punktami
  */
 double distance(const Point& a, const Point& b) {
@@ -50,13 +46,14 @@ double distance(const Point& a, const Point& b) {
 
 const double EPS = 1e-9; // stała do pracy na wartościach zmiennoprzecinkowych
 
-bool compareX(const Point& p1, const Point& p2) { return p1.x < p2.x; }
-bool compareY(const Point& p1, const Point& p2) { return p1.y < p2.y; }
+
+bool compareX(const Point& p1, const Point& p2) { return p1.x < p2.x; } // Porównuje współrzedną x dwóch punktów
+bool compareY(const Point& p1, const Point& p2) { return p1.y < p2.y; } // Porównuje współrzedną y dwóch punktów
 
 /**
  * Funkcja z zadaniem 1 o otoczce
- * @param points
- * @param numOfPoints
+ * @param points Vector z wszystkim punktami
+ * @param numOfPoints ilośc wszystkich punktów
  * @return
  */
 int zadanie1(vector<Point> points, int numOfPoints) {
@@ -108,10 +105,7 @@ int zadanie1(vector<Point> points, int numOfPoints) {
 
 /**
  * Funkcja obliczajaca odległość punktu od prostej przechodząca przez punkty a i b
- * @param p
- * @param a
- * @param b
- * @return
+ * @return  obliczajaca odległość punktu od prostej
  */
 double distanceToLine(const Point& p, const Point& a, const Point& b) {
     double distanceX = b.x - a.x;
@@ -177,13 +171,13 @@ double zadanie2(vector<Point> points, int numberOfPoints) {
 
 
 /**
- * zadanie 3 przerobione tak by wykorzystać je w nowym, wydajniejszym rozwiązaniu, zwykłe brutforce znalezienie najmniejszej odległości miezy punktami
+ * znajdduje odległość między punktami w zakresie left, right
  * @param points
- * @param left
- * @param right
- * @return najmniejszą odległość
+ * @param left indesk punkty startowego
+ * @param right indeks punktu końcowego
+ * @return najmniejszą odległość między punkrami
  */
-double zadanie3(const vector<Point>& points, int left, int right) {
+double closestSimple(const vector<Point>& points, int left, int right) {
     double minDist = distance(points[0], points[1]);
     for (int i = left; i < right; i++) {
         for (int j = i + 1; j <= right; j++) {
@@ -229,7 +223,7 @@ double splittedClosestsPoints(vector<Point>& points, double d) {
  */
 double closestRecu(vector<Point>& points, int left, int right) {
     if (right - left <= 3) {
-        return zadanie3(points, left, right);
+        return closestSimple(points, left, right);
     }
     int mid = (left + right) / 2;
     Point midPoint = points[mid];
@@ -254,7 +248,7 @@ double closestRecu(vector<Point>& points, int left, int right) {
  * @param numOfPoints
  * @return najmnijesza odległość między punktami
  */
-double zadanie3efficient(vector<Point> points, int numOfPoints) {
+double zadanie3(vector<Point> points, int numOfPoints) {
     sort(points.begin(), points.end(), [](const Point &a, const Point &b) {
         return a.x < b.x;
     });
@@ -267,8 +261,6 @@ int main() {
     int numOfPoints;
     cout << "Podaj nazwe pliku: ";
     cin >> fileName;
-
-    if (fileName == "'") fileName = "dane.txt"; // nie chciało mi się za każdym razem wpisywać "dane.txt" więc dla przyśpieszenia debbugowania stworzyłem tego if
 
     double x, y; // zmienne przechowujące x i y poszczególych punktów
     vector<Point> points;  // 2 wymiarowy vector, przechowujący współrzędne x i y punktów
@@ -304,7 +296,7 @@ int main() {
     //
     // zadanie3efficient(points, numOfPoints);
 
-    double minDist = zadanie3efficient(points, numOfPoints);
+    double minDist = zadanie3(points, numOfPoints);
     cout << "Najblizsze punkty: (" << minPointA.x << ", " << minPointA.y << ") i (" << minPointB.x << ", " << minPointB.y << ") d = " << minDist << endl;
 
 
