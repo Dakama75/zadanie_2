@@ -15,3 +15,8 @@ Zadanie 3:
 Oblicza najmnijeszą odległosć miedzy punktami
 Wykorzystuje algorytm dziel i rządź, który najpierw sortuje zbiór po wartości x, następnie dzieli zbiór na pól i szuka najbliższych punktów w obu połowach oraz na lini ich podziału
 dzięki temu nie trzeba sprawdzać każdego punktu z kązdym, sortowanie jest najbardziej wymagające czasowo 
+
+wykorzystałęm standordowe biblioteki c++: vector, algorithm, cmath, iostream, fstream, math.h, które posłużyły mi do sortowania, obliczania odległości, odczytu z pliku, działań na doubl oraz umożliwiły korzystanie z vectorów
+wykorzystałem również funkcje rekurencyjne i obiekty
+
+Jedynym edge-casem był problem z operacjami na zmiennych typu double, które rozwiązałem dodając stałą ESP oraz wykorzystując funkcję fabs
