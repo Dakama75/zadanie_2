@@ -14,7 +14,7 @@ struct Point {
 
 
 vector<Point> zadanie1Results; // zmienna globalna, przechowuje wynik zadania 1, wykorzystywana w zadaniu 2
-
+Point minPointA, minPointB;
 
 /**
  * >0 - lewoskręt;
@@ -154,26 +154,111 @@ double zadanie2(vector<Point> points, int numberOfPoints) {
 }
 
 /**
- * Najprostszy sposób na rozwiązanie tego zadania
+ * Najprostszy sposób na rozwiązanie tego zadania, nawypadek gdyby ta za pomocą divide & conquer by nie działała
  * @param points
  * @param numOfPoints
  * @return
  */
-int zadanie3(vector<Point> points, int numOfPoints) {
+// int zadanie3(vector<Point> points, int numOfPoints) {
+//     double minDist = distance(points[0], points[1]);
+//     for (int i = 0; i < numOfPoints; i++) {
+//         for (int j = i+1; j < numOfPoints; j++) {
+//             if (distance(points[i], points[j]) < minDist) {
+//                 minDist = distance(points[i], points[j]);
+//                 minPointA = points[i];
+//                 minPointB = points[j];
+//             }
+//         }
+//     }
+//
+//     cout << "Najbizsze punkty: (" << minPointA.x << ", " << minPointA.y << "), (" << minPointB.x << ", " << minPointB.y << ") d = " << minDist<< endl;
+//     return minDist;
+// }
+
+
+/**
+ * zadanie 3 przerobione tak by wykorzystać je w nowym, wydajniejszym rozwiązaniu, zwykłe brutforce znalezienie najmniejszej odległości miezy punktami
+ * @param points
+ * @param left
+ * @param right
+ * @return najmniejszą odległość
+ */
+double zadanie3(const vector<Point>& points, int left, int right) {
     double minDist = distance(points[0], points[1]);
-    Point minPointA, minPointB;
-    for (int i = 0; i < numOfPoints; i++) {
-        for (int j = i+1; j < numOfPoints; j++) {
+    for (int i = left; i < right; i++) {
+        for (int j = i + 1; j <= right; j++) {
             if (distance(points[i], points[j]) < minDist) {
-                minDist = distance(points[i], points[j]);
-                minPointA = points[i];
-                minPointB = points[j];
+
+            minDist = min(minDist, distance(points[i], points[j]));
+            minPointA = points[i];
+            minPointB = points[j];
             }
         }
     }
+    return minDist;
+}
 
-    cout << "Najbizsze punkty: (" << minPointA.x << ", " << minPointA.y << "), (" << minPointB.x << ", " << minPointB.y << ") d = " << minDist<< endl;
-    return 0;
+/**
+ * sprawda czy najblizszy punkt nie lezy w pasie podziału zbioru na dwa mniejsze
+ * @param points lista punktow, ktore leża w odległości d od lini podziału podziału zbioru
+ * @param d
+ * @return
+ */
+double splittedClosestsPoints(vector<Point>& points, double d) {
+    sort(points.begin(), points.end(), [](const Point& a, const Point& b) {
+        return a.y < b.y;
+    });
+
+    double minDist = d;
+    for (int i = 0; i < (int)points.size(); ++i) {
+        for (int j = i + 1; j < (int)points.size() && (points[j].y - points[i].y) < minDist; ++j) {
+            minDist = min(minDist, distance(points[i], points[j]));
+        }
+    }
+
+    return minDist;
+}
+
+
+/**
+ * Rekurencyjna funkcja, która dzieli punkty na dwa mnijesze zbiory i w nich szuka najbliższych punktów
+ * @param points
+ * @param left
+ * @param right
+ * @return
+ */
+double closestRecu(vector<Point>& points, int left, int right) {
+    if (right - left <= 3) {
+        return zadanie3(points, left, right);
+    }
+    int mid = (left + right) / 2;
+    Point midPoint = points[mid];
+
+    double distanceLeft = closestRecu(points, left, mid);
+    double distanceRight = closestRecu(points, mid + 1, right);
+    double d = min(distanceLeft, distanceRight); // najmniejsza odległośc miedzy punkatami z lewej i sprawej, wykorzystywana do sprawdzenia czy na lini podziału nie ma bliższych punktów
+
+    // Vector przechowujący punkty w odległości d od lini podziału
+    vector<Point> pointsInTheCenter;
+    for (int i = left; i <= right; i++) {
+        if (fabs(points[i].x - midPoint.x) < d)
+            pointsInTheCenter.push_back(points[i]);
+    }
+
+    return min(d, splittedClosestsPoints(pointsInTheCenter, d));
+}
+
+/**
+ * sortuje punkty po x i wywołuje rekurencyjną funkcję closestRecu
+ * @param points
+ * @param numOfPoints
+ * @return najmnijesza odległość między punktami
+ */
+double zadanie3efficient(vector<Point> points, int numOfPoints) {
+    sort(points.begin(), points.end(), [](const Point &a, const Point &b) {
+        return a.x < b.x;
+    });
+    return closestRecu(points, 0, numOfPoints - 1);
 }
 
 int main() {
@@ -213,8 +298,16 @@ int main() {
 
     zadanie2(zadanie1Results, zadanie1Results.size());
 
-    zadanie3(points, numOfPoints);
+    // zadanie3(points, numOfPoints);
+
+    // cout << endl;
+    //
+    // zadanie3efficient(points, numOfPoints);
+
+    double minDist = zadanie3efficient(points, numOfPoints);
+    cout << "Najblizsze punkty: (" << minPointA.x << ", " << minPointA.y << ") i (" << minPointB.x << ", " << minPointB.y << ") d = " << minDist << endl;
+
+
 
     return 0;
-    // TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
 }
