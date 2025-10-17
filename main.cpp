@@ -6,37 +6,6 @@
 #include <math.h>
 
 using namespace std;
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-
-// /**
-//  * Odczytuje
-//  */
-// vector<vector<double>> getPoints(string filePath) {
-//
-//     int numOfPoints; // Przechowuje liczbe punktów
-//     double x, y; // zmienne przechowujące x i y poszczególych punktów
-//     vector<vector<double>> points;  // 2 wymiarowy vector, przechowujący współrzędne x i y punktów
-//
-//     // Read from the text file
-//     ifstream file(filePath);
-//
-//     if (!file.is_open()) {
-//         cout << "Nie można utworzyć pliku, upewnij się czy jest w tym samum folderze co .exe";
-//         return vector<vector<double>>();
-//     }
-//
-//     file >> numOfPoints;
-//     cout << "Number of Points: " << numOfPoints << endl;
-//
-//
-//     while (file >> x >> y) {
-//         points.push_back({x,y});
-//     }
-//
-//     // Close the file
-//     file.close();
-//     return points;
-// }
 
 
 struct Point {
